@@ -48,6 +48,7 @@ export default function Signup() {
     setLoading(true);
     try {
       // Process filteredValues (without agreement)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { agreement, ...filteredValues } = values;
       await signupUserAPI(filteredValues);
       // 跳轉至驗證信頁面
@@ -61,11 +62,11 @@ export default function Signup() {
   };
 
   return (
-    <main className="flex flex-col justify-center h-screen items-center">
-      <div className="text-center mb-10">
+    <main className="flex h-screen flex-col items-center justify-center">
+      <div className="mb-10 text-center">
         <h3 className="text-2xl">註冊學員</h3>
       </div>
-      <div className="flex justify-center items-center w-full">
+      <div className="flex w-full items-center justify-center">
         <Image className="w-1/2 max-w-[300px]" src={signupImage} alt="Picture of the author" />
         <Form className="w-1/2 max-w-[400px]" layout="vertical" onFinish={onFinish}>
           <Form.Item label="姓名" name="name" rules={[{ required: true, message: '請輸入姓名' }]}>
@@ -126,8 +127,7 @@ export default function Signup() {
             valuePropName="checked"
             rules={[
               {
-                validator: (_, value) =>
-                  value ? Promise.resolve() : Promise.reject(new Error('需要同意條款')),
+                validator: (_, value) => (value ? Promise.resolve() : Promise.reject(new Error('需要同意條款'))),
               },
             ]}
           >

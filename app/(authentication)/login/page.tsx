@@ -1,5 +1,5 @@
 'use client';
-import { Button, Checkbox, Form, Input, message } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import Image from 'next/image';
 import loginImage from '/public/login.svg';
 import Link from 'next/link';
@@ -99,11 +99,11 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex flex-col justify-center h-screen items-center">
-      <div className="text-center mb-10">
+    <main className="flex h-screen flex-col items-center justify-center">
+      <div className="mb-10 text-center">
         <h3 className="text-2xl">歡迎回來！</h3>
       </div>
-      <div className="flex justify-center items-center w-full">
+      <div className="flex w-full items-center justify-center">
         <Image className="w-1/2 max-w-[300px]" src={loginImage} alt="Picture of the author" />
         <Form
           className="w-1/2 max-w-[400px]"

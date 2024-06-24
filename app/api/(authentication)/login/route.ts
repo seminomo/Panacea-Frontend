@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 
 // Define the structure of the request body
 interface RequestBody {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
 const url = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/sign-in`;
@@ -12,6 +12,8 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   try {
     // Parse the request body
     const body: RequestBody = await req.json();
+    console.log(body);
+    console.log(url);
 
     const response = await fetch(url, {
       method: 'POST',
