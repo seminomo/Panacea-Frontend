@@ -129,7 +129,7 @@ export default function LoginPage() {
             name="password"
             rules={[
               { required: true, message: '請輸入密碼' },
-              { min: 8, message: '請設定至少6碼英文與數字' },
+              { min: 8, message: '請設定至少8碼英文與數字' },
             ]}
           >
             <Input.Password />

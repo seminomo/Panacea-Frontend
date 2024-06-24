@@ -1,6 +1,10 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 import Cookies from 'js-cookie';
 // import cloneDeep from 'lodash.clonedeep';
+
+interface ApiResponse<T = any> {
+  data: T;
+}
 
 // 請求
 export const request = axios.create({
@@ -8,31 +12,32 @@ export const request = axios.create({
   timeout: 30000,
 });
 
-const requestBeforeSend = (config: any) => {
+const requestBeforeSend = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
   config.params = {
     ...config.params,
   };
-  config.headers = {
-    ...config.headers,
-    Authorization: `Bearer ${Cookies.get('token')}`,
-  };
+  const headers = new AxiosHeaders(config.headers);
+  headers.set('Authorization', `Bearer ${Cookies.get('token')}`);
+  config.headers = headers;
 
   return config;
 };
 
-const requestBeforeResponse = (response: any) => {
+const requestBeforeResponse = <T>(response: AxiosResponse<ApiResponse<T>>): T => {
   try {
     const { data } = response.data;
-    return data?.data || data;
+    return data;
   } catch (err) {
     console.log(err, 'err?');
-    return err;
+    throw err;
   }
 };
 
-[request].forEach((req) => {
-  req.interceptors.request.use(requestBeforeSend, (err) => Promise.reject(err));
-  req.interceptors.response.use(requestBeforeResponse, async (err) => {
+// Apply the interceptors
+request.interceptors.request.use(requestBeforeSend, (err) => Promise.reject(err));
+request.interceptors.response.use(
+  (response) => requestBeforeResponse(response),
+  async (err) => {
     return Promise.reject(err);
-  });
-});
+  },
+);

@@ -1,68 +1,80 @@
 'use client';
 
 import Image from 'next/image';
-// import { getUserInfo } from '@/app/api/user';
-import { useEffect } from 'react';
-// import userStore from '../stores/user';
-
-const isLogin: boolean = false;
+import Cookies from 'js-cookie';
+import { getUserInfo } from '@/app/api/user';
+import { useState, useEffect } from 'react';
+import userStore from '../stores/user';
 
 interface NavbarOption {
   title: string;
   url: string;
 }
 
-const navbarOptions: NavbarOption[] = isLogin
-  ? [
-      {
-        title: '成為教練',
-        url: '/logout',
-      },
-      {
-        title: '刊登課程',
-        url: '/logout',
-      },
-      {
-        title: '',
-        url: '/logout',
-      },
-    ]
-  : [
-      {
-        title: '成為教練',
-        url: '/signup',
-      },
-      {
-        title: '登入',
-        url: '/login',
-      },
-      {
-        title: '註冊',
-        url: '/signup',
-      },
-    ];
-
 export default function Navbar() {
-  // const { setUserInfo } = userStore();
+  const { setUserInfo } = userStore();
+  const [navbarOptions, setNavbarOptions] = useState<NavbarOption[]>([
+    {
+      title: '成為教練',
+      url: '/signup',
+    },
+    {
+      title: '登入',
+      url: '/login',
+    },
+    {
+      title: '註冊',
+      url: '/signup',
+    },
+  ]);
+  const getUserInfoHandler = async () => {
+    const { name: storeName } = userStore.getState();
+
+    if (Cookies.get('token') && !storeName) {
+      const data = await getUserInfo();
+      const { name, email, avatar, isAdmin, isCoach } = data;
+
+      setUserInfo({
+        name,
+        email,
+        avatar,
+        isAdmin,
+        isCoach,
+      });
+
+      if (isCoach) {
+        setNavbarOptions([
+          {
+            title: '刊登課程',
+            url: '/profile/coach/course-manage',
+          },
+          {
+            title: name,
+            url: '/profile',
+          },
+        ]);
+      } else {
+        setNavbarOptions([
+          {
+            title: '成為教練',
+            url: '/apply-coach',
+          },
+          {
+            title: '',
+            url: '/login',
+          },
+          {
+            title: name,
+            url: '/profile',
+          },
+        ]);
+      }
+    }
+  };
 
   useEffect(() => {
-    const getUserInfoHandler = async () => {
-      // const { name: userName, email, avatar, isAdmin, isCoach } = await getUserInfo();
-      // console.log(setUserInfo);
-      // console.log(userName);
-      // setUserInfo({
-      //   name: userName,
-      //   email,
-      //   avatar,
-      //   isAdmin,
-      //   isCoach,
-      // });
-      // const { name } = userStore.getState();
-      // console.log(name);
-    };
-
     getUserInfoHandler();
-  });
+  }, []);
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-10 flex items-center justify-center bg-[#FFF] pb-[23px] pt-[30px] shadow-sm">
@@ -79,7 +91,18 @@ export default function Navbar() {
           <ul className="flex items-center gap-[20px] px-[48px] py-[40px]">
             {navbarOptions.map(({ url, title }, index) => (
               <li key={index}>
-                <a href={url}>{title}</a>
+                {url === '/profile' ? (
+                  <a href={url} className="heading6 flex items-center gap-[4px]">
+                    {' '}
+                    <Image src="/avatar.svg" width={32} height={32} alt="notify icon" /> {title}{' '}
+                  </a>
+                ) : title ? (
+                  <a href={url}>{title}</a>
+                ) : (
+                  <div>
+                    <Image src="/notifications.svg" width={20} height={20} alt="notify icon" />
+                  </div>
+                )}
               </li>
             ))}
           </ul>

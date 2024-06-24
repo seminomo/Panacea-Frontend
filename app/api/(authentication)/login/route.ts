@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 // Define the structure of the request body
 interface RequestBody {
@@ -7,6 +8,19 @@ interface RequestBody {
 }
 
 const url = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/sign-in`;
+const setCookie = (token: string) => {
+  const cookieHeader = cookies();
+  return cookieHeader.set({
+    name: 'token',
+    value: token,
+    // TODO: httpOnly 後續要調整為 true
+    httpOnly: false,
+    secure: process.env.NODE_ENV !== 'development',
+    path: '/',
+    maxAge: 60 * 60 * 24, // 24 hour
+    sameSite: process.env.NODE_ENV === 'development' ? undefined : 'strict',
+  });
+};
 
 export const POST = async (req: Request): Promise<NextResponse> => {
   try {
@@ -27,14 +41,15 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
     // Handle non-OK responses
     if (!response.ok) {
-      // return NextResponse.json({ message: data.message || 'Login failed' }, { status: response.status });
       return NextResponse.json(data);
+    }
+    const { token } = data.data;
+    if (token) {
+      // Set token in cookie
+      setCookie(token);
     }
     return NextResponse.json(data);
   } catch (error) {
-    // Log the error for debugging
-    console.error('Error during login:', error);
-
     // Return a 500 status code for internal server errors
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
