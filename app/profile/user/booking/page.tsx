@@ -1,3 +1,8 @@
+import BookingCourseCard from './components/BookingCourseCard';
 export default function BookingPage() {
-  return <main>booking page</main>;
+  return (
+    <main>
+      <BookingCourseCard></BookingCourseCard>
+    </main>
+  );
 }

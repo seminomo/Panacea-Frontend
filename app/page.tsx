@@ -182,12 +182,18 @@ export default function Home() {
           ？
           <Image className="ml-[5px] translate-y-[-15px]" src="/decorate.svg" alt="icon" width={24} height={48} />
         </h3>
-        <div className="flex justify-center">
-          <Image src="/side-decorate.svg" alt="icon" width={278} height={390} />
+        <div className="relative flex justify-center">
+          <Image
+            src="/side-decorate.svg"
+            className="absolute left-[-17%] top-[50%] translate-y-[-50%]"
+            alt="icon"
+            width={278}
+            height={390}
+          />
           <ul className="flex items-center justify-center rounded-[32px] bg-[#fff] px-[16px] py-[48px]">
             {whyPanacea.map(({ title, description, slogan }, index) => (
               <li
-                className="relative flex h-[465px] w-[465px] items-center rounded-full border-[2px] border-[#E5E5E5] px-[80px] [&:nth-child(2)]:mx-[-45px]"
+                className="relative flex h-[365px] w-[365px] items-center rounded-full border-[2px] border-[#E5E5E5] px-[80px] [&:nth-child(2)]:mx-[-45px]"
                 key={index}
               >
                 <div className="flex flex-col gap-[32px]">
@@ -198,7 +204,13 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          <Image className="rotate-180" src="/side-decorate.svg" alt="icon" width={278} height={390} />
+          <Image
+            className="absolute right-[-17%] top-[50%] translate-y-[-50%] rotate-180"
+            src="/side-decorate.svg"
+            alt="icon"
+            width={278}
+            height={390}
+          />
         </div>
       </section>
     </main>
