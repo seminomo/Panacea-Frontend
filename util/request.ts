@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
-import Cookies from 'js-cookie';
-// import cloneDeep from 'lodash.clonedeep';
+import { cookies } from 'next/headers';
+const cookieStore = cookies();
+const token = cookieStore.get('token')?.value;
 
 interface ApiResponse<T = any> {
   data: T;
@@ -17,7 +18,7 @@ const requestBeforeSend = (config: InternalAxiosRequestConfig): InternalAxiosReq
     ...config.params,
   };
   const headers = new AxiosHeaders(config.headers);
-  headers.set('Authorization', `Bearer ${Cookies.get('token')}`);
+  headers.set('Authorization', `Bearer ${token}`);
   config.headers = headers;
 
   return config;

@@ -15,7 +15,7 @@ const userStore = create<UserInfo>((set) => ({
   email: '',
   isAdmin: false,
   isCoach: false,
-  setUserInfo: (userInfo) => set((state) => ({ ...state, ...userInfo })),
+  setUserInfo: (userInfo) => set({ ...userInfo }),
 }));
 
 export default userStore;

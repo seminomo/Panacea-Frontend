@@ -1,27 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import { getUserInfo } from '@/app/api/user';
+import userStore from '../stores/user';
+
 interface NavbarOption {
   title: string;
   url: string;
 }
 
-interface UserInfoType {
-  name: string;
-  email: string;
-  isCoach: boolean;
-  isAdmin: boolean;
-}
-
 const getUserInfoHandler = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get('token')?.value;
-  let userInfo: UserInfoType = {
-    name: '',
-    email: '',
-    isCoach: false,
-    isAdmin: false,
-  };
+  const setUserInfo = userStore.getState().setUserInfo;
+
   let navBarData: NavbarOption[] = [
     {
       title: '成為教練',
@@ -36,22 +28,27 @@ const getUserInfoHandler = async () => {
       url: '/signup',
     },
   ];
+
   if (token) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/user-info`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await getUserInfo();
+    const { name, isCoach, isAdmin, avatar, email } = res;
+
+    setUserInfo({
+      name,
+      email,
+      avatar,
+      isAdmin,
+      isCoach,
     });
-    const projects = await res.json();
-    userInfo = projects.data;
-    if (userInfo.isCoach) {
+
+    if (isCoach) {
       navBarData = [
         {
           title: '刊登課程',
           url: '/profile/coach/course-manage',
         },
         {
-          title: userInfo.name,
+          title: name,
           url: '/profile',
         },
       ];
@@ -66,13 +63,13 @@ const getUserInfoHandler = async () => {
           url: '/login',
         },
         {
-          title: userInfo.name,
+          title: name,
           url: '/profile',
         },
       ];
     }
   }
-  return { token, userInfo, navBarData };
+  return { token, navBarData };
 };
 export default async function Navbar() {
   const { navBarData } = await getUserInfoHandler();
