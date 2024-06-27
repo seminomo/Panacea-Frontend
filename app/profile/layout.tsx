@@ -10,7 +10,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
       </div>
       <section className="mx-auto w-3/4">
         <div className="flex flex-row gap-x-10">
-          <SideBar Username="user1" />
+          <SideBar />
           {children}
         </div>
       </section>

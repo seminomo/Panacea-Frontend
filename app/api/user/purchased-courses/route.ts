@@ -7,48 +7,48 @@ interface CustomSearchParams extends URLSearchParams {
   status: string | null;
 }
 
-const mockResponse = {
-  data: [
-    {
-      id: '0001',
-      createdAt: '2024-10-10 00:00:00',
-      status: 'PAID',
-      price: 1000,
-      purchaseCount: 5,
-      remainingCount: 3,
-      bookingCount: 2,
-      paymentDate: '2024-10-10 00:00:00',
-      course: {
-        name: '課程名稱',
-        content: '課程內容',
-        coach: {
-          name: '教練名稱',
-        },
-      },
-      imageUrl: 'https://picsum.photos/500/400?random=1',
-      paymentMethod: 'CreaditCard',
-    },
-    {
-      id: '0002',
-      createdAt: '2024-10-10 00:00:00',
-      status: 'PAID',
-      price: 1000,
-      purchaseCount: 5,
-      remainingCount: 3,
-      bookingCount: 2,
-      paymentDate: '2024-10-10 00:00:00',
-      course: {
-        name: '課程名稱2',
-        content: '課程內容2',
-        coach: {
-          name: '教練名稱2',
-        },
-      },
-      imageUrl: 'https://picsum.photos/500/400?random=2',
-      paymentMethod: 'CreaditCard',
-    },
-  ],
-};
+// const mockResponse = {
+//   data: [
+//     {
+//       id: '0001',
+//       createdAt: '2024-10-10 00:00:00',
+//       status: 'PAID',
+//       price: 1000,
+//       purchaseCount: 5,
+//       remainingCount: 3,
+//       bookingCount: 2,
+//       paymentDate: '2024-10-10 00:00:00',
+//       course: {
+//         name: '課程名稱',
+//         content: '課程內容',
+//         coach: {
+//           name: '教練名稱',
+//         },
+//       },
+//       imageUrl: 'https://picsum.photos/500/400?random=1',
+//       paymentMethod: 'CreaditCard',
+//     },
+//     {
+//       id: '0002',
+//       createdAt: '2024-10-10 00:00:00',
+//       status: 'PAID',
+//       price: 1000,
+//       purchaseCount: 5,
+//       remainingCount: 3,
+//       bookingCount: 2,
+//       paymentDate: '2024-10-10 00:00:00',
+//       course: {
+//         name: '課程名稱2',
+//         content: '課程內容2',
+//         coach: {
+//           name: '教練名稱2',
+//         },
+//       },
+//       imageUrl: 'https://picsum.photos/500/400?random=2',
+//       paymentMethod: 'CreaditCard',
+//     },
+//   ],
+// };
 
 const getCookie = (name: string): string | undefined => {
   const cookieStore = cookies();
@@ -57,10 +57,8 @@ const getCookie = (name: string): string | undefined => {
 };
 
 export const GET = async (req: NextRequest) => {
-  // console.log('🚀 ~ GET ~ params:', params);
   const searchParams: CustomSearchParams = req.nextUrl.searchParams as CustomSearchParams;
   const status = searchParams.get('status');
-  console.log('🚀 ~ GET ~ status:', status);
 
   // status pending,success,fail
   // axios
@@ -82,10 +80,6 @@ export const GET = async (req: NextRequest) => {
     });
     // Parse the response data
     const data = await response.json();
-    // 暫時解決沒有資料
-    if (data.data.length === 0) {
-      return NextResponse.json(mockResponse);
-    }
     return NextResponse.json(data);
   } catch (error) {
     // Log the error for debugging

@@ -4,12 +4,9 @@ import Image from 'next/image';
 import loginImage from '/public/login.svg';
 import Link from 'next/link';
 
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   interface LoginData {
@@ -57,12 +54,9 @@ export default function LoginPage() {
   }, []);
 
   // get submit data
-
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      // Process filteredValues (without rememberMe)
-      // const { remember, ...filteredValues } = values;
       await loginUser(values);
     } finally {
       setLoading(false);
@@ -91,7 +85,7 @@ export default function LoginPage() {
         return;
       }
       // 跳轉至首頁
-      router.push('/');
+      window.location.href = '/';
       message.success('登入成功！');
     } catch (error) {
       console.error('Error during login:', error);
@@ -105,12 +99,7 @@ export default function LoginPage() {
       </div>
       <div className="flex w-full items-center justify-center">
         <Image className="w-1/2 max-w-[300px]" src={loginImage} alt="Picture of the author" />
-        <Form
-          className="w-1/2 max-w-[400px]"
-          layout="vertical"
-          // initialValues={{ remember: true }}
-          onFinish={onFinish}
-        >
+        <Form className="w-1/2 max-w-[400px]" layout="vertical" onFinish={onFinish}>
           <Form.Item
             label="Email"
             name="email"
@@ -134,9 +123,6 @@ export default function LoginPage() {
           >
             <Input.Password />
           </Form.Item>
-          {/* <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item> */}
           <div className="mb-5">
             <Link href="/forgot-password">忘記密碼</Link>
           </div>

@@ -7,38 +7,38 @@ interface CustomSearchParams extends URLSearchParams {
   status: string | null;
 }
 
-const mockResponse = {
-  data: [
-    {
-      id: '001',
-      course: {
-        name: '課程名稱',
-        coverImage: 'https://picsum.photos/500/400?random=1',
-      },
-      courseSchedule: {
-        startTime: '2024-10-10 00:00:00',
-        endTime: '2024-10-10 01:00:00',
-      },
-      coach: {
-        name: '教練名稱',
-      },
-    },
-    {
-      id: '002',
-      course: {
-        name: '課程名稱2',
-        coverImage: 'https://picsum.photos/500/400?random=2',
-      },
-      courseSchedule: {
-        startTime: '2024-10-10 00:00:00',
-        endTime: '2024-10-10 01:00:00',
-      },
-      coach: {
-        name: '教練名稱2',
-      },
-    },
-  ],
-};
+// const mockResponse = {
+//   data: [
+//     {
+//       id: '001',
+//       course: {
+//         name: '課程名稱',
+//         coverImage: 'https://picsum.photos/500/400?random=1',
+//       },
+//       courseSchedule: {
+//         startTime: '2024-10-10 00:00:00',
+//         endTime: '2024-10-10 01:00:00',
+//       },
+//       coach: {
+//         name: '教練名稱',
+//       },
+//     },
+//     {
+//       id: '002',
+//       course: {
+//         name: '課程名稱2',
+//         coverImage: 'https://picsum.photos/500/400?random=2',
+//       },
+//       courseSchedule: {
+//         startTime: '2024-10-10 00:00:00',
+//         endTime: '2024-10-10 01:00:00',
+//       },
+//       coach: {
+//         name: '教練名稱2',
+//       },
+//     },
+//   ],
+// };
 
 const getCookie = (name: string): string | undefined => {
   const cookieStore = cookies();
@@ -72,10 +72,6 @@ export const GET = async (req: NextRequest) => {
     });
     // Parse the response data
     const data = await response.json();
-    // 暫時解決沒有資料
-    if (data.data.length === 0) {
-      return NextResponse.json(mockResponse);
-    }
     return NextResponse.json(data);
   } catch (error) {
     // Log the error for debugging
